@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.staticfiles import StaticFiles
+from app.api.routes import router as api_router
 from app.db.database import create_tables
 import app.models.fields as fields
 import app.models.forms as forms
@@ -30,6 +31,8 @@ def get_application():
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    app.include_router(api_router, prefix="/api")
 
     create_tables([forms.Base, fields.Base, users.Base, transcriptions.Base])
 
