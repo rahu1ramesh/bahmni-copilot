@@ -19,7 +19,7 @@ class FormUpdate(BaseModel):
         from_attributes = True
 
 
-class Forms(BaseModel):
+class Form(BaseModel):
     id: int
     name: str
     prompt: Optional[str] = None
