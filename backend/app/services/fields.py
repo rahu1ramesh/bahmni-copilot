@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from typing import List, Optional
-from app.models.fields import Fields
-from app.schemas.fields import FieldCreate, FieldUpdate
+from app.schemas.fields import FieldCreate, FieldUpdate, Fields
 from app.services.forms import FormsService
 
 
