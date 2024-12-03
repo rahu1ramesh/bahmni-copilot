@@ -29,7 +29,7 @@ class FieldUpdate(BaseModel):
         from_attributes = True
 
 
-class Fields(BaseModel):
+class Field(BaseModel):
     id: int
     name: str
     query_selector: Optional[str] = None
