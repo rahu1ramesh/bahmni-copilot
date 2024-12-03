@@ -47,6 +47,7 @@ To set up **Bahmni Copilot**, follow the steps below:
    - **`S3_ACCESS_KEY_ID`**: The access key ID for authenticating with the S3 storage service. This is used in conjunction with the secret access key to securely access your S3 bucket.
    - **`S3_SECRET_ACCESS_KEY`**: The secret key associated with the access key ID, used for authenticating requests to the S3 storage service. This should be kept confidential.
    - **`S3_BUCKET_NAME`**: The name of the S3 bucket where audio files will be stored. Ensure the bucket exists and is properly configured to allow uploads and access from the application.
+   - **`DATABASE_URL`**: The SQL Alchemy Database URL to connect to your preferred database.
 
    You can either set these variables directly in your terminal or create a `.env` file for convenience.
 
