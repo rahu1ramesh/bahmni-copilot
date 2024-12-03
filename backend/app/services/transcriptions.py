@@ -2,7 +2,8 @@ import uuid
 import os
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, UploadFile
-from app.schemas.transcriptions import Transcriptions
+from app.models.transcriptions import Transcriptions
+from app.schemas.transcriptions import Transcription
 from app.services.fields import FieldsService
 from app.utils.s3 import S3Utils
 from app.utils.openai import OpenAIUtils
@@ -13,7 +14,7 @@ class TranscriptionService:
     SUPPORTED_FILE_TYPES = {"mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm"}
 
     @staticmethod
-    def create_transcription(db: Session, user_id: int, form_id: int, file: UploadFile) -> Transcriptions:
+    def create_transcription(db: Session, user_id: int, form_id: int, file: UploadFile) -> Transcription:
         """
         Creates a new transcription record and uploads the associated audio file to S3.
 

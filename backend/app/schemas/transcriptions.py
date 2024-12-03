@@ -11,7 +11,7 @@ class TranscriptionCreate(BaseModel):
         from_attributes = True
 
 
-class Transcriptions(BaseModel):
+class Transcription(BaseModel):
     id: int
     upload_uuid: str
     user_id: int

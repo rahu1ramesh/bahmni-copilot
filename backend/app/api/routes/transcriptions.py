@@ -2,14 +2,14 @@ from fastapi import APIRouter, Depends, UploadFile, File, status
 from sqlalchemy.orm import Session
 from app.config.database import get_db
 from app.services.transcriptions import TranscriptionService
-from app.schemas.transcriptions import Transcriptions
+from app.schemas.transcriptions import Transcription
 
 
 router = APIRouter(prefix="/transcriptions", tags=["Transcriptions"])
 
 
 @router.post("/{form_id}",
-             response_model=Transcriptions,
+             response_model=Transcription,
              status_code=status.HTTP_201_CREATED,
              generate_unique_id_function=lambda _: "UploadFile")
 async def create_transcription(
