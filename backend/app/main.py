@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.staticfiles import StaticFiles
 from app.api.routes import router as api_router
-from app.db.database import create_tables
+from app.config.database import create_tables
 import app.models.fields as fields
 import app.models.forms as forms
 import app.models.transcriptions as transcriptions

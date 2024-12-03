@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, UploadFile, File, status
 from sqlalchemy.orm import Session
-from app.db.database import get_db
+from app.config.database import get_db
 from app.services.transcriptions import TranscriptionService
 from app.schemas.transcriptions import Transcriptions
 
