@@ -31,7 +31,10 @@ class OpenAIUtils:
         cls.initialize_client()
 
         if not os.path.exists(file_path):
-            raise ValueError(f"File '{file_path}' does not exist.")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"File '{file_path}' does not exist."
+            )
 
         with open(file_path, "rb") as audio_file:
             try:

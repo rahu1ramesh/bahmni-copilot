@@ -47,7 +47,7 @@ class TranscriptionService:
                 S3Utils.upload_file(file_path=temp_file_path, object_name=s3_key)
             except ValueError as e:
                 raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    status_code=status.HTTP_424_FAILED_DEPENDENCY,
                     detail=f"Failed to upload audio file: {str(e)}"
                 )
             transcription_text = None

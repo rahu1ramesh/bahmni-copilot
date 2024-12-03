@@ -1,9 +1,11 @@
 import boto3
-from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
 import os
+import logging
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
+from fastapi import HTTPException, status
 from dotenv import load_dotenv
 from typing import Optional
-import logging
+from boto3.exceptions import S3UploadFailedError
 
 
 load_dotenv()
@@ -43,7 +45,10 @@ class S3Utils:
             S3Utils.initialize_s3()
 
         if not os.path.exists(file_path):
-            raise ValueError(f"File '{file_path}' does not exist.")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"File '{file_path}' does not exist."
+            )
 
         if object_name is None:
             object_name = os.path.basename(file_path)
@@ -52,9 +57,23 @@ class S3Utils:
             bucket_name = os.getenv("S3_BUCKET_NAME")
             S3Utils.s3.upload_file(file_path, bucket_name, object_name)
             logging.info(f"File '{file_path}' uploaded to bucket '{bucket_name}' as '{object_name}'.")
+        except S3UploadFailedError as e:
+            raise HTTPException(
+                status_code=status.HTTP_424_FAILED_DEPENDENCY,
+                detail=f"Failed to upload file to S3: {e}"
+            )
         except NoCredentialsError:
-            raise ValueError("S3 credentials not provided or incorrect.")
+            raise HTTPException(
+                status_code=status.HTTP_424_FAILED_DEPENDENCY,
+                detail="S3 credentials not provided or incorrect."
+            )
         except PartialCredentialsError:
-            raise ValueError("Incomplete S3 credentials provided.")
+            raise HTTPException(
+                status_code=status.HTTP_424_FAILED_DEPENDENCY,
+                detail="Incomplete S3 credentials provided."
+            )
         except ClientError as e:
-            raise ValueError(f"Failed to upload file to S3: {e}")
+            raise HTTPException(
+                status_code=status.HTTP_424_FAILED_DEPENDENCY,
+                detail=f"Failed to upload file to S3: {e}"
+            )
