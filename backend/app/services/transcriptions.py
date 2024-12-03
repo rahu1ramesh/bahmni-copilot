@@ -2,7 +2,7 @@ import uuid
 import os
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, UploadFile
-from app.models.transcriptions import Transcriptions
+from app.schemas.transcriptions import Transcriptions
 from app.services.fields import FieldsService
 from app.utils.s3 import S3Utils
 from app.utils.openai import OpenAIUtils
