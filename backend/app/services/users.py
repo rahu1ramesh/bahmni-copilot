@@ -1,8 +1,12 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
+from passlib.context import CryptContext
 from pydantic import parse_obj_as
 from app.models.users import Users
 from app.schemas.users import UserCreate, UserUpdate, User
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class UsersService:
@@ -33,11 +37,18 @@ class UsersService:
 
     @staticmethod
     def create_user(db: Session, user_data: UserCreate) -> User:
-        new_user = Users(**user_data.dict())
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-        return parse_obj_as(User, new_user)
+        existing_user = db.query(Users).filter(Users.email == user_data.email).first()
+        if not existing_user:
+            hashed_password = pwd_context.hash(user_data.password)
+            user_data_dict = user_data.dict()
+            user_data_dict["password"] = hashed_password
+            new_user = Users(**user_data_dict)
+            db.add(new_user)
+            db.commit()
+            db.refresh(new_user)
+            return new_user
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
+                            detail=f"User with email id {user_data.email} already exist.")
 
     @staticmethod
     def update_user(db: Session, user_id: int, user_data: UserUpdate) -> User:

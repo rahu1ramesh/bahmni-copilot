@@ -10,7 +10,7 @@ class Users(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True, nullable=False)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False, default="")
-    encrypted_password = Column(String, nullable=False, default="")
+    password = Column(String, nullable=False, default="")
     created_at = Column(TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=False), nullable=False, server_default=func.now(), onupdate=func.now())
     admin = Column(Boolean, default=False)

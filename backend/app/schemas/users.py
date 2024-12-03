@@ -6,7 +6,7 @@ from datetime import datetime
 class UserCreate(BaseModel):
     name: str
     email: str
-    encrypted_password: str
+    password: str
     admin: Optional[bool] = False
 
     class Config:
@@ -16,7 +16,7 @@ class UserCreate(BaseModel):
 class UserUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[str] = None
-    encrypted_password: Optional[str] = None
+    password: Optional[str] = None
 
     class Config:
         from_attributes = True

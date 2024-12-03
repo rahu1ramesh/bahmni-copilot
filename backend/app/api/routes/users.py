@@ -25,13 +25,7 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_db)):
     - **email**: User's email address (must be unique).
     - **password**: User's password (encrypted on creation).
     """
-    try:
-        return UsersService.create_user(db, user_data)
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while creating the user: {str(e)}",
-        )
+    return UsersService.create_user(db, user_data)
 
 
 @router.get(
