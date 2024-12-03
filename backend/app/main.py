@@ -2,6 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.staticfiles import StaticFiles
+from app.db.database import create_tables
+import app.models.fields as fields
+import app.models.forms as forms
+import app.models.transcriptions as transcriptions
+import app.models.users as users
 
 
 def get_application():
@@ -25,6 +30,8 @@ def get_application():
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    create_tables([forms.Base, fields.Base, users.Base, transcriptions.Base])
 
     return app
 
