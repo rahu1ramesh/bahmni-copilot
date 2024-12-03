@@ -22,7 +22,7 @@ class UserUpdate(BaseModel):
         from_attributes = True
 
 
-class Users(BaseModel):
+class User(BaseModel):
     id: int
     name: str
     email: str
