@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
-from fastapi.staticfiles import StaticFiles
 from app.api.routes import router as api_router
+from app.api.routes.root import router as root_router
 from app.config.database import create_tables
 import app.models.fields as fields
 import app.models.forms as forms
@@ -33,6 +32,7 @@ def get_application():
     )
 
     app.include_router(api_router, prefix="/api")
+    app.include_router(root_router)
 
     create_tables([forms.Base, fields.Base, users.Base, transcriptions.Base])
 
@@ -40,25 +40,3 @@ def get_application():
 
 
 app = get_application()
-
-
-@app.get("/", tags=["Root"])
-def read_root():
-    """
-    Root endpoint.
-    """
-    return {"message": "Bahmni Copilot"}
-
-
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
-favicon_path = 'static/favicon.ico'
-
-
-@app.get("/docs", include_in_schema=False)
-def overridden_swagger():
-    return get_swagger_ui_html(openapi_url="/openapi.json", title="Bahmni - Copilot", swagger_favicon_url=favicon_path)
-
-
-@app.get("/redoc", include_in_schema=False)
-def overridden_redoc():
-    return get_redoc_html(openapi_url="/openapi.json", title="Bahmni - Copilot", redoc_favicon_url=favicon_path)
