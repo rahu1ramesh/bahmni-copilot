@@ -5,15 +5,16 @@ from datetime import datetime
 
 class UserCreate(BaseModel):
     name: str
+    user_name: str
     email: str
     password: str
-    admin: Optional[bool] = False
 
     class Config:
         from_attributes = True
 
 
 class UserUpdate(BaseModel):
+    user_name: str
     name: Optional[str] = None
     email: Optional[str] = None
     password: Optional[str] = None
@@ -25,6 +26,7 @@ class UserUpdate(BaseModel):
 class User(BaseModel):
     id: int
     name: str
+    user_name: str
     email: str
     created_at: datetime
     updated_at: datetime

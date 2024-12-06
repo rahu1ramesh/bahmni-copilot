@@ -3,4 +3,6 @@ fileignoreconfig:
   checksum: fdc437ff4c68838760faef13e7ea590177a72257090cfed74c0292738aed8a9e
 - filename: backend/app/api/routes/auth.py
   checksum: fbe9056bc637a8980ac7a6fc8ccc74144463564bf1fee452185fd1e99331b940
+- filename: backend/app/services/users.py
+  checksum: 8b021b0a6c0be2e7765fc6626d79ec352f89333335ca95b357d0762686d05f1a
 version: ""

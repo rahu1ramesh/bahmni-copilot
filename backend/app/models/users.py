@@ -9,6 +9,7 @@ class Users(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True, nullable=False)
     name = Column(String, nullable=False)
+    user_name = Column(String, unique=True, nullable=False, default="")
     email = Column(String, unique=True, nullable=False, default="")
     password = Column(String, nullable=False, default="")
     created_at = Column(TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
@@ -18,5 +19,5 @@ class Users(Base):
     transcriptions = relationship("Transcriptions", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return (f"<User(id={self.id}, email='{self.email}', admin={self.admin}, "
+        return (f"<User(id={self.id}, username='{self.user_name}', email='{self.email}', admin={self.admin}, "
                 f"created_at='{self.created_at}', updated_at='{self.updated_at}')>")
