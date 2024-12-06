@@ -1,0 +1,4 @@
+fileignoreconfig:
+- filename: backend/app/services/auth.py
+  checksum: fdc437ff4c68838760faef13e7ea590177a72257090cfed74c0292738aed8a9e
+version: ""
