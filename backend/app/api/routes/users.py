@@ -3,10 +3,13 @@ from sqlalchemy.orm import Session
 from app.services.users import UsersService
 from app.schemas.users import UserCreate, UserUpdate, User
 from app.config.database import get_db
+from app.services.auth import get_current_user
+
 
 router = APIRouter(
     prefix="/users",
     tags=["Users"],
+    dependencies=[Depends(get_current_user)]
 )
 
 

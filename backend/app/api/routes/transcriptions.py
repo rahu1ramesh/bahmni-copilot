@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from app.config.database import get_db
 from app.services.transcriptions import TranscriptionService
 from app.schemas.transcriptions import Transcription
+from app.services.auth import get_current_user
 
 
-router = APIRouter(prefix="/transcriptions", tags=["Transcriptions"])
+router = APIRouter(prefix="/transcriptions", tags=["Transcriptions"], dependencies=[Depends(get_current_user)])
 
 
 @router.post("/{form_id}",

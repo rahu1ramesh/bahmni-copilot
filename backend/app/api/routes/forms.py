@@ -3,11 +3,13 @@ from sqlalchemy.orm import Session
 from app.schemas.forms import FormCreate, FormUpdate, Form
 from app.config.database import get_db
 from app.services.forms import FormsService
+from app.services.auth import get_current_user
 
 
 router = APIRouter(
     prefix="/forms",
     tags=["Forms"],
+    dependencies=[Depends(get_current_user)]
 )
 
 
