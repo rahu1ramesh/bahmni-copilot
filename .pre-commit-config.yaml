@@ -3,12 +3,17 @@ repos:
     rev: 24.10.0
     hooks:
       - id: black
+        entry: black backend/
+        language: python
+        minimum_pre_commit_version: 2.9.2
+        require_serial: true
+        types_or: [ python, pyi ]
 
   - repo: local
     hooks:
       - id: flake8
         name: flake8
-        entry: env -i PATH=./bin:./.venv/bin:./.virtualenv/bin python -m flake8
+        entry: cd backend && flake8
         language: system
         types: [python]
 
