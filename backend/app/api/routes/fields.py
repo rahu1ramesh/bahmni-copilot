@@ -3,20 +3,21 @@ from sqlalchemy.orm import Session
 from app.config.database import get_db
 from app.schemas.fields import FieldCreate, FieldUpdate, Field
 from app.services.fields import FieldsService
-
+from app.services.auth import get_current_user
 
 router = APIRouter(
     prefix="/fields",
     tags=["Fields"],
+    dependencies=[Depends(get_current_user)]
 )
 
 
 @router.get("/", response_model=list[Field], status_code=status.HTTP_200_OK)
-def get_all_fields(form_id: int = None, db: Session = Depends(get_db)):
+def get_all_fields(db: Session = Depends(get_db)):
     """
     Retrieve all fields. Optionally filter by form ID.
     """
-    return FieldsService.get_all_fields(db, form_id=form_id)
+    return FieldsService.get_all_fields(db)
 
 
 @router.get("/{field_id}", response_model=Field, status_code=status.HTTP_200_OK)

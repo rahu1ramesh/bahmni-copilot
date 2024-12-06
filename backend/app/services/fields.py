@@ -1,19 +1,15 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from pydantic import parse_obj_as
-from typing import List, Optional
+from typing import List
 from app.models.fields import Fields
 from app.schemas.fields import FieldCreate, FieldUpdate, Field
 from app.services.forms import FormsService
 
-
 class FieldsService:
     @staticmethod
-    def get_all_fields(db: Session, form_id: Optional[int] = None) -> List[Field]:
-        query = db.query(Fields)
-        if form_id:
-            query = query.filter(Fields.form_id == form_id)
-            return parse_obj_as(List[Field], query.all())
+    def get_all_fields(db: Session) -> List[Field]:
+        return parse_obj_as(List[Field], db.query(Fields).all())
 
     @staticmethod
     def get_field_by_id(db: Session, field_id: int) -> Field:
