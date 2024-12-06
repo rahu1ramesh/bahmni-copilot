@@ -1,12 +1,9 @@
 from fastapi import APIRouter, status
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
-from fastapi.staticfiles import StaticFiles
 
 
 router = APIRouter()
 
-
-router.mount("/static", StaticFiles(directory="app/static"), name="static")
 favicon_path = 'static/favicon.ico'
 
 

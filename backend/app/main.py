@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from app.api.routes import router as api_router
 from app.api.routes.root import router as root_router
 from app.config.database import create_tables
@@ -33,6 +34,7 @@ def get_application():
 
     app.include_router(api_router, prefix="/api")
     app.include_router(root_router)
+    app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
     create_tables([forms.Base, fields.Base, users.Base, transcriptions.Base])
 
