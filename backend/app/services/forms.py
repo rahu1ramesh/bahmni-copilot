@@ -40,6 +40,6 @@ class FormsService:
 
     @staticmethod
     def delete_form(db: Session, form_id: int) -> None:
-        form = FormsService.get_form_by_id(db, form_id)
+        form = db.query(Forms).filter(Forms.id == form_id).first()
         db.delete(form)
         db.commit()

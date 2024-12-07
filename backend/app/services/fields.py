@@ -47,6 +47,6 @@ class FieldsService:
 
     @staticmethod
     def delete_field(db: Session, field_id: int) -> None:
-        field = FieldsService.get_field_by_id(db, field_id)
+        field = db.query(Fields).filter(Fields.id == field_id).first()
         db.delete(field)
         db.commit()

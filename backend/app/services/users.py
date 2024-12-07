@@ -62,6 +62,6 @@ class UsersService:
 
     @staticmethod
     def delete_user(db: Session, user_id: int) -> None:
-        db_user = UsersService.get_user_by_id(db, user_id)
+        user = db.query(Users).filter(Users.id == user_id).first()
         db.delete(db_user)
         db.commit()
