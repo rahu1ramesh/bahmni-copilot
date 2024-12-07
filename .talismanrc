@@ -11,4 +11,10 @@ fileignoreconfig:
   checksum: 50eae408110a230b9d0edf391562f91ac301333c0625c4c326f81d59cc9dac04
 - filename: backend/app/services/forms.py
   checksum: 09dd63a45853c87c4efbd9258717a7acaaf56de8b56c143be423591150705633
+- filename: backend/test/api/routes/test_auth.py
+  checksum: fcc143e617775eac2e7f517f1d5adc950a30cd7f0f6292aaaab4b4b06fd0ab9a
+- filename: backend/test/api/routes/test_forms.py
+  checksum: d5af291f47d018bca24e1291bdf0ce9b2242deca8abb30d16defc295004f3ab2
+- filename: backend/test/api/routes/test_fields.py
+  checksum: f8daf81be5f965420bf5be0181d5028d105e304a032a5db727b360a3e8d0f63c
 version: ""
