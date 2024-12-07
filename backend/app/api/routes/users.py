@@ -76,15 +76,7 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
     - **user_id**: The ID of the user to update.
     - **user_data**: The fields to update (optional).
     """
-    try:
-        return UsersService.update_user(db, user_id, user_data)
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while updating the user: {str(e)}",
-        )
+    return UsersService.update_user(db, user_id, user_data)
 
 
 @router.delete(
@@ -98,16 +90,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db), dependencies=[Depen
     Delete a user by ID. This will permanently remove the user from the system.
     - **user_id**: The ID of the user to delete.
     """
-    try:
-        UsersService.delete_user(db, user_id)
-        return {"message": "User deleted successfully"}
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred while deleting the user: {str(e)}",
-        )
+    UsersService.delete_user(db, user_id)
 
 
 @router.get(
