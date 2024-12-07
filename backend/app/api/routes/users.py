@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.services.users import UsersService
 from app.schemas.users import UserCreate, UserUpdate, User
 from app.config.database import get_db
-from app.services.auth import get_current_user
+from app.services.auth import get_current_user, is_admin
 
 
 router = APIRouter(
@@ -20,7 +20,7 @@ router = APIRouter(
     summary="Create a new user",
     response_description="The newly created user",
 )
-def create_user(user_data: UserCreate, db: Session = Depends(get_db)):
+def create_user(user_data: UserCreate, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]) -> User:
     """
     Create a new user. Requires user information such as `name`, `email`, and `password`.
 
@@ -38,7 +38,7 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_db)):
     summary="Get user by ID",
     response_description="User details by ID",
 )
-def get_user(user_id: int, db: Session = Depends(get_db)):
+def get_user(user_id: int, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]) -> User:
     """
     Retrieve user details by user ID.
     - **user_id**: The ID of the user to retrieve.
@@ -54,7 +54,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     summary="Get user by email",
     response_description="User details by email",
 )
-def get_user_by_email(email: str, db: Session = Depends(get_db)):
+def get_user_by_email(email: str, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]) -> User:
     """
     Retrieve user details by email address.
     - **email**: The email of the user to retrieve.
@@ -70,7 +70,7 @@ def get_user_by_email(email: str, db: Session = Depends(get_db)):
     summary="Update user information",
     response_description="Updated user information",
 )
-def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_db)):
+def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]) -> User:
     """
     Update an existing user's information. Fields that are not provided will not be updated.
     - **user_id**: The ID of the user to update.
@@ -79,7 +79,7 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
     try:
         return UsersService.update_user(db, user_id, user_data)
     except HTTPException as e:
-        raise e  # Forward the HTTPException if raised
+        raise e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -93,7 +93,7 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
     summary="Delete a user",
     response_description="Successfully deleted the user",
 )
-def delete_user(user_id: int, db: Session = Depends(get_db)):
+def delete_user(user_id: int, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]):
     """
     Delete a user by ID. This will permanently remove the user from the system.
     - **user_id**: The ID of the user to delete.
@@ -102,7 +102,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
         UsersService.delete_user(db, user_id)
         return {"message": "User deleted successfully"}
     except HTTPException as e:
-        raise e  # Forward the HTTPException if raised
+        raise e
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -117,7 +117,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     summary="Get all users",
     response_description="List of all users",
 )
-def get_all_users(db: Session = Depends(get_db)):
+def get_all_users(db: Session = Depends(get_db), dependencies=[Depends(is_admin)]):
     """
     Retrieve a list of all users in the system.
     """

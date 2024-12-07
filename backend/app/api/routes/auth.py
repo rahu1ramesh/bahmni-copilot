@@ -38,6 +38,7 @@ def sign_up(user_data: UserCreate, db: Session = Depends(get_db)):
     status_code=status.HTTP_200_OK,
     summary="Login a user",
     response_description="The newly created user",
+    generate_unique_id_function=lambda _: "LoginUser",
 )
 def login(user_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
     """

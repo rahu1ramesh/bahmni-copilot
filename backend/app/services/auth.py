@@ -90,3 +90,12 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(auth_sc
         return user
     except JWTError:
         raise credentials_exception
+
+def is_admin(user: Users = Depends(get_current_user)):
+    """Check if the user is an admin."""
+    if not user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have permission to access this resource"
+        )
+    return user
