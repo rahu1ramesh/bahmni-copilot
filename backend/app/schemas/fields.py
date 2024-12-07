@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
 
@@ -12,8 +12,7 @@ class FieldCreate(BaseModel):
     enum_options: Optional[str] = None
     form_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class FieldUpdate(BaseModel):
@@ -25,8 +24,7 @@ class FieldUpdate(BaseModel):
     maximum: Optional[float] = None
     enum_options: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Field(BaseModel):
@@ -40,5 +38,4 @@ class Field(BaseModel):
     enum_options: Optional[str] = None
     form_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
