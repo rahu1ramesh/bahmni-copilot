@@ -15,12 +15,11 @@ class Forms(Base):
 
     transcriptions = relationship("Transcriptions", back_populates="form", cascade="all, delete-orphan")
 
-    # Relationship with Fields
     fields = relationship(
         "Fields",
         back_populates="form",
         cascade="all, delete-orphan",
-        lazy="joined",  # Optional for optimization
+        lazy="joined",
     )
 
     def __repr__(self):

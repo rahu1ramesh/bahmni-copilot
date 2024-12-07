@@ -28,6 +28,7 @@ class User(BaseModel):
     name: str
     user_name: str
     email: str
+    is_admin: bool
     created_at: datetime
     updated_at: datetime
 
