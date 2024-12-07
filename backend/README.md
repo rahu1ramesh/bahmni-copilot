@@ -1,4 +1,4 @@
-# Copilot - AI-Powered Form Filling
+# Bahmni Copilot - AI-Powered Health Care Support
 
 ## Overview
 
