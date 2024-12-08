@@ -8,8 +8,8 @@ class Forms(Base):
     __tablename__ = "forms"
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True, nullable=False)
-    name = Column(String, nullable=False)
-    prompt = Column(String, nullable=True)
+    name = Column(String(255), nullable=False)
+    prompt = Column(String(255), nullable=True)
     created_at = Column(TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=False), nullable=False, server_default=func.now(), onupdate=func.now())
 
