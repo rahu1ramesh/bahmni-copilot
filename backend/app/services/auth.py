@@ -2,7 +2,6 @@ import os
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
-from pydantic import TypeAdapter
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -92,6 +91,7 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(auth_sc
         return user
     except JWTError:
         raise credentials_exception
+
 
 def is_admin(user: Users = Depends(get_current_user)):
     """Check if the user is an admin."""
