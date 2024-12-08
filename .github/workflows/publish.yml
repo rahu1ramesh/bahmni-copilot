@@ -52,7 +52,7 @@ jobs:
           cd backend
           flake8
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
           cd backend
-          pytest test
+          pytest test --cov=app --cov-report=term
