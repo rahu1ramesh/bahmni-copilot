@@ -17,7 +17,3 @@ class Users(Base):
     is_admin = Column(Boolean, default=False)
 
     transcriptions = relationship("Transcriptions", back_populates="user", cascade="all, delete-orphan")
-
-    def __repr__(self):
-        return (f"<User(id={self.id}, username='{self.user_name}', email='{self.email}', is_admin={self.is_admin}, "
-                f"created_at='{self.created_at}', updated_at='{self.updated_at}')>")

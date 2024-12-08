@@ -20,9 +20,3 @@ class Fields(Base):
     updated_at = Column(TIMESTAMP(timezone=False), nullable=False, server_default=func.now(), onupdate=func.now())
 
     form = relationship("Forms", back_populates="fields")
-
-    def __repr__(self):
-        return (f"<Fields(id={self.id}, name='{self.name}', query_selector='{self.query_selector}', "
-                f"description='{self.description}', field_type='{self.field_type}', minimum={self.minimum}, "
-                f"maximum={self.maximum}, enum_options='{self.enum_options}', form_id={self.form_id}, "
-                f"created_at='{self.created_at}', updated_at='{self.updated_at}')>")

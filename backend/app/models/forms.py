@@ -21,7 +21,3 @@ class Forms(Base):
         cascade="all, delete-orphan",
         lazy="joined",
     )
-
-    def __repr__(self):
-        return (f"<Forms(id={self.id}, name='{self.name}', prompt='{self.prompt}', "
-                f"created_at='{self.created_at}', updated_at='{self.updated_at}')>")

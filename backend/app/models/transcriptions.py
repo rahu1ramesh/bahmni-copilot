@@ -19,10 +19,3 @@ class Transcriptions(Base):
 
     user = relationship("Users", back_populates="transcriptions")
     form = relationship("Forms", back_populates="transcriptions")
-
-    def __repr__(self):
-        return (
-            f"<Transcription(id={self.id}, user_id={self.user_id}, form_id={self.form_id}, "
-            f"status='{self.status}', duration={self.duration}, total_tokens={self.total_tokens}, "
-            f"created_at='{self.created_at}', updated_at='{self.updated_at}')>"
-        )
