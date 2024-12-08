@@ -19,6 +19,7 @@ async def create_transcription(
         ..., description="The file with the entity to process"
     ),
     db: Session = Depends(get_db),
+    user_data: dict = Depends(get_current_user)
 ):
     """
     Create a new transcription record with an uploaded audio file.
@@ -30,7 +31,7 @@ async def create_transcription(
     """
     transcription = TranscriptionService.create_transcription(
         db=db,
-        user_id=1,
+        user_id=user_data.id,
         form_id=form_id,
         file=file
     )
