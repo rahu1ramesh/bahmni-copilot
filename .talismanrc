@@ -27,4 +27,6 @@ fileignoreconfig:
   checksum: 77d83431ca4a9aad1f1a2d914b0ee4b9a23bba18cf0990662cf0a85defb9d4c7
 - filename: backend/app/models/users.py
   checksum: 40884a63218248c6fa430019c4317e0ade94b07924efee5cfa54b8342f1ad427
+- filename: backend/test/test_openai_helper.py
+  checksum: ac6e1cd3d8f0f2ba915747db8b40a110763ceaa6ca5ce7d02112e71a390f735d
 version: ""

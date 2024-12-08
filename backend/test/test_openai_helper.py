@@ -5,6 +5,7 @@ from app.utils.openai import OpenAIUtils
 
 
 class TestOpenAIUtils(unittest.TestCase):
+    @patch.dict(os.environ, {"OPENAI_API_KEY": "test_api_key"})
     @patch("os.path.exists", return_value=False)
     def test_transcribe_audio_file_not_exist(self, mock_exists):
         with self.assertRaises(HTTPException) as context:
