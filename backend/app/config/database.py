@@ -7,7 +7,10 @@ load_dotenv()
 
 SQL_ALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
-db_engine = create_engine(SQL_ALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})
+if not SQL_ALCHEMY_DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is not set")
+
+db_engine = create_engine(SQL_ALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
 
