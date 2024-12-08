@@ -2,11 +2,13 @@ import os
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta, timezone
+from pydantic import TypeAdapter
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from typing import Union, Any
 from app.models.users import Users
+from app.schemas.users import User
 from app.config.database import get_db
 
 
@@ -62,7 +64,7 @@ def get_user(db: Session, user_name: str) -> Users:
     return user
 
 
-def authenticate_user(db: Session, user_name: str, password: str) -> Users:
+def authenticate_user(db: Session, user_name: str, password: str) -> User:
     """Authenticate a user by username and password."""
     user = get_user(db, user_name)
     if not user or not verify_password(password, user.password):
@@ -74,7 +76,7 @@ def authenticate_user(db: Session, user_name: str, password: str) -> Users:
     return user
 
 
-def get_current_user(db: Session = Depends(get_db), token: str = Depends(auth_schema)) -> Users:
+def get_current_user(db: Session = Depends(get_db), token: str = Depends(auth_schema)) -> User:
     """Retrieve the current user based on the JWT token."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
