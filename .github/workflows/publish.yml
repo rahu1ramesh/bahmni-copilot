@@ -35,6 +35,9 @@ jobs:
           cd backend
           flake8
 
+      - name: Set environment variables
+        run: echo "SQL_ALCHEMY_DATABASE_URL=sqlite:///./test.db" >> $GITHUB_ENV
+
       - name: Run tests
         run: |
           cd backend
