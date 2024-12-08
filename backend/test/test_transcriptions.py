@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from fastapi import status, UploadFile
 from app.main import app
+from app.config.database import get_db
 from app.services.transcriptions import TranscriptionService
 from app.schemas.forms import FormCreate
 from app.services.fields import FieldsService, FieldCreate
@@ -16,6 +17,18 @@ from app.services.auth import create_access_token
 
 client = TestClient(app)
 
+
+def override_get_db():
+    from app.config.database import SessionLocal
+
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()
+
+
+app.dependency_overrides[get_db] = override_get_db
 
 @pytest.fixture
 def db_session():
