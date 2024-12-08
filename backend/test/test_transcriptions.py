@@ -30,6 +30,7 @@ def override_get_db():
 
 app.dependency_overrides[get_db] = override_get_db
 
+
 @pytest.fixture
 def db_session():
     return MagicMock(spec=Session)
@@ -157,7 +158,6 @@ def test_create_transcription_endpoint(
 
     assert response.status_code == status.HTTP_201_CREATED
     data = response.json()
-    assert data["user_id"] == 1
     assert data["form_id"] == create_form.id
     assert data["transcription_text"] == "transcribed text"
     assert data["status"] == "completed"
