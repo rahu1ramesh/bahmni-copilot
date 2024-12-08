@@ -27,6 +27,9 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=5
 
+    env:
+      SQL_ALCHEMY_DATABASE_URL: "mysql+pymysql://test_user:test_password@localhost:3306/test_db"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,9 +44,6 @@ jobs:
           cd backend
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Set environment variables for MySQL
-        run: echo "SQL_ALCHEMY_DATABASE_URL=mysql+pymysql://test_user:test_password@localhost:3306/test_db" >> $GITHUB_ENV
 
       - name: Run flake8
         run: |
