@@ -9,6 +9,7 @@ from app.schemas.forms import FormCreate
 from app.services.fields import FieldsService, FieldCreate
 from app.services.forms import FormsService
 from app.models.users import Users
+from app.models.transcriptions import Transcriptions
 from app.models.fields import Fields
 from app.models.forms import Forms
 from app.services.auth import create_access_token
@@ -62,6 +63,7 @@ def test_db():
     try:
         yield db
     finally:
+        db.query(Transcriptions).delete()
         db.query(Fields).delete()
         db.query(Forms).delete()
         db.query(Users).delete()
