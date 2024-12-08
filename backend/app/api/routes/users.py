@@ -19,8 +19,9 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
     summary="Create a new user",
     response_description="The newly created user",
+    dependencies=[Depends(is_admin)],
 )
-def create_user(user_data: UserCreate, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]) -> User:
+def create_user(user_data: UserCreate, db: Session = Depends(get_db)) -> User:
     """
     Create a new user. Requires user information such as `name`, `email`, and `password`.
 
@@ -37,8 +38,9 @@ def create_user(user_data: UserCreate, db: Session = Depends(get_db), dependenci
     status_code=status.HTTP_200_OK,
     summary="Get user by ID",
     response_description="User details by ID",
+    dependencies=[Depends(is_admin)],
 )
-def get_user(user_id: int, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]) -> User:
+def get_user(user_id: int, db: Session = Depends(get_db)) -> User:
     """
     Retrieve user details by user ID.
     - **user_id**: The ID of the user to retrieve.
@@ -53,8 +55,9 @@ def get_user(user_id: int, db: Session = Depends(get_db), dependencies=[Depends(
     status_code=status.HTTP_200_OK,
     summary="Get user by email",
     response_description="User details by email",
+    dependencies=[Depends(is_admin)],
 )
-def get_user_by_email(email: str, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]) -> User:
+def get_user_by_email(email: str, db: Session = Depends(get_db)) -> User:
     """
     Retrieve user details by email address.
     - **email**: The email of the user to retrieve.
@@ -69,8 +72,9 @@ def get_user_by_email(email: str, db: Session = Depends(get_db), dependencies=[D
     status_code=status.HTTP_200_OK,
     summary="Update user information",
     response_description="Updated user information",
+    dependencies=[Depends(is_admin)],
 )
-def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]) -> User:
+def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_db)) -> User:
     """
     Update an existing user's information. Fields that are not provided will not be updated.
     - **user_id**: The ID of the user to update.
@@ -84,8 +88,9 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete a user",
     response_description="Successfully deleted the user",
+    dependencies=[Depends(is_admin)],
 )
-def delete_user(user_id: int, db: Session = Depends(get_db), dependencies=[Depends(is_admin)]):
+def delete_user(user_id: int, db: Session = Depends(get_db)):
     """
     Delete a user by ID. This will permanently remove the user from the system.
     - **user_id**: The ID of the user to delete.
@@ -99,8 +104,9 @@ def delete_user(user_id: int, db: Session = Depends(get_db), dependencies=[Depen
     status_code=status.HTTP_200_OK,
     summary="Get all users",
     response_description="List of all users",
+    dependencies=[Depends(is_admin)],
 )
-def get_all_users(db: Session = Depends(get_db), dependencies=[Depends(is_admin)]):
+def get_all_users(db: Session = Depends(get_db)):
     """
     Retrieve a list of all users in the system.
     """
