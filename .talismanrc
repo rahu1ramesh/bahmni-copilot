@@ -4,9 +4,9 @@ fileignoreconfig:
 - filename: backend/app/api/routes/auth.py
   checksum: fbe9056bc637a8980ac7a6fc8ccc74144463564bf1fee452185fd1e99331b940
 - filename: backend/app/services/users.py
-  checksum: 8b021b0a6c0be2e7765fc6626d79ec352f89333335ca95b357d0762686d05f1a
+  checksum: ed20c9a8718a2b1a8561d3161d2399424f0cb8b2c45de47fd9c3920302cba0e3
 - filename: backend/test/api/routes/test_users.py
-  checksum: 99943c508dabfeb14541aac96cc19106ae3147453a8160e1883454afa857d2e9
+  checksum: f139804e912102223c3a87d0b22b5800ed8019fab03689cf4e3a70cbc329a737
 - filename: backend/app/services/fields.py
   checksum: 50eae408110a230b9d0edf391562f91ac301333c0625c4c326f81d59cc9dac04
 - filename: backend/app/services/forms.py
@@ -17,4 +17,12 @@ fileignoreconfig:
   checksum: d5af291f47d018bca24e1291bdf0ce9b2242deca8abb30d16defc295004f3ab2
 - filename: backend/test/api/routes/test_fields.py
   checksum: f8daf81be5f965420bf5be0181d5028d105e304a032a5db727b360a3e8d0f63c
+- filename: backend/test/api/routes/test_users.py
+  checksum: f139804e912102223c3a87d0b22b5800ed8019fab03689cf4e3a70cbc329a737
+- filename: backend/test/test_s3_utils.py
+  checksum: 3b7e44210139bcaad3605ee35607f44214568c74abfa36dfe512b60187a25f14
+- filename: backend/test/test_transcriptions.py
+  checksum: 1483215612f9002ba46b1a6d91f573dff7ec18ea302e823d468dbd8003daa33d
+- filename: backend/test/test_users.py
+  checksum: d25302090fc0dfdd32c8357c851fb9b99b9c32610dfb1e7ff51ace9d4ba813d5
 version: ""

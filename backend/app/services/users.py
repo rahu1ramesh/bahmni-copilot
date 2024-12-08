@@ -60,8 +60,8 @@ class UsersService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User with user_id {user_id} not found"
             )
-        for field, field_value in user_data.model_dump(exclude_unset=True).items():
-            setattr(new_user, field, field_value)
+        for key, value in user_data.model_dump(exclude_unset=True).items():
+            setattr(new_user, key, value)
         db.commit()
         db.refresh(new_user)
         return TypeAdapter(User).validate_python(new_user)

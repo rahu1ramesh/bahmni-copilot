@@ -75,6 +75,11 @@ def test_get_form_by_id(test_db: Session, auth_headers):
     assert response.json()["name"] == form_data.name
 
 
+def test_form_not_found_by_id(test_db: Session, auth_headers):
+    response = client.get(f"/api/forms/{20}", headers=auth_headers)
+    assert response.status_code == 404
+
+
 def test_create_form(test_db: Session, auth_headers):
     form_data = {"name": "New Form", "prompt": "Test Prompt"}
     response = client.post("/api/forms/", json=form_data, headers=auth_headers)
@@ -89,6 +94,12 @@ def test_update_form(test_db: Session, auth_headers):
     response = client.put(f"/api/forms/{form.id}", json=update_data, headers=auth_headers)
     assert response.status_code == 200
     assert response.json()["name"] == update_data["name"]
+
+
+def test_update_form_not_found(test_db: Session, auth_headers):
+    update_data = {"name": "Updated Form", "prompt": "Updated Prompt"}
+    response = client.put(f"/api/forms/{20}", json=update_data, headers=auth_headers)
+    assert response.status_code == 404
 
 
 def test_delete_form(test_db: Session, auth_headers):

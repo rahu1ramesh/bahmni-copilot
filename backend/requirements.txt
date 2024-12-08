@@ -17,3 +17,4 @@ cryptography==44.0.0
 pre-commit==4.0.1
 pymysql==1.1.1
 psycopg==3.2.3
+pytest-mock==3.14.0

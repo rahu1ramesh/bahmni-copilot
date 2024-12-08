@@ -6,6 +6,14 @@ from app.config.database import get_db
 from app.schemas.users import UserCreate
 from app.services.users import UsersService
 from app.models.users import Users
+from app.services.auth import (
+    JWT_SECRET_KEY,
+    ALGORITHM,
+    authenticate_user,
+)
+from jose import jwt
+from datetime import datetime, timedelta
+from fastapi import HTTPException
 
 client = TestClient(app)
 
@@ -75,3 +83,38 @@ def test_login_invalid_credentials(test_db: Session, default_user):
     response = client.post("/api/auth/login", data=login_data)
     assert response.status_code == 401
     assert response.json()["detail"] == "Invalid username or password"
+
+
+def test_get_user_not_found(test_db: Session):
+    with pytest.raises(HTTPException) as exc_info:
+        authenticate_user(test_db, "nonexistentuser", "password")
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.detail == "User with username nonexistentuser not found"
+
+
+def test_authenticate_user_not_found(test_db: Session):
+    response = client.get("/api/users/nonexistentuser")
+    assert response.status_code == 401
+
+
+def test_authenticate_user_invalid_password(test_db: Session, default_user):
+    with pytest.raises(HTTPException) as exc_info:
+        authenticate_user(test_db, default_user.user_name, "wrongpassword")
+    assert exc_info.value.status_code == 401
+    assert exc_info.value.detail == "Invalid username or password"
+
+
+def test_get_current_user_invalid_token(test_db: Session):
+    invalid_token = "invalidtoken"
+    response = client.get("/api/users/me", headers={"Authorization": f"Bearer {invalid_token}"})
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid credentials"
+
+
+def test_get_current_user_no_sub(test_db: Session):
+    payload = {"exp": datetime.utcnow() + timedelta(minutes=30)}
+    token = jwt.encode(payload, JWT_SECRET_KEY, algorithm=ALGORITHM)
+
+    response = client.get("/api/users/me", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid credentials"

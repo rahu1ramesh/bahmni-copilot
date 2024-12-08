@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.api.routes import router as api_router
 from app.api.routes.root import router as root_router
-from app.config.database import create_tables
+from app.config.database import create_tables, db_engine
 import app.models.fields as fields
 import app.models.forms as forms
 import app.models.transcriptions as transcriptions
@@ -36,7 +36,7 @@ def get_application():
     app.include_router(root_router)
     app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-    create_tables([forms.Base, fields.Base, users.Base, transcriptions.Base])
+    create_tables([forms.Base, fields.Base, users.Base, transcriptions.Base], db_engine)
 
     return app
 
