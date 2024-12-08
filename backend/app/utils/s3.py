@@ -1,7 +1,7 @@
 import boto3
 import os
 import logging
-from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError, ClientError, EndpointConnectionError
 from fastapi import HTTPException, status
 from dotenv import load_dotenv
 from typing import Optional
@@ -57,6 +57,11 @@ class S3Utils:
             bucket_name = os.getenv("S3_BUCKET_NAME")
             S3Utils.s3.upload_file(file_path, bucket_name, object_name)
             logging.info(f"File '{file_path}' uploaded to bucket '{bucket_name}' as '{object_name}'.")
+        except EndpointConnectionError:
+            raise HTTPException(
+                status_code=status.HTTP_424_FAILED_DEPENDENCY,
+                detail="Failed to connect to S3 endpoint."
+            )
         except S3UploadFailedError as e:
             raise HTTPException(
                 status_code=status.HTTP_424_FAILED_DEPENDENCY,

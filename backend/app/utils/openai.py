@@ -95,7 +95,10 @@ class OpenAIUtils:
 
             result = eval(response.choices[0].message.content)
             if not isinstance(result, dict):
-                raise ValueError("The AI response is not a valid dictionary.")
+                raise HTTPException(
+                    status_code=status.HTTP_424_FAILED_DEPENDENCY,
+                    detail="Failed to parse the AI's response: The AI response is not a valid dictionary."
+                )
             return result
         except Exception as e:
             raise HTTPException(
