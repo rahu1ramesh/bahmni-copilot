@@ -24,7 +24,7 @@ fileignoreconfig:
 - filename: backend/test/test_users.py
   checksum: d25302090fc0dfdd32c8357c851fb9b99b9c32610dfb1e7ff51ace9d4ba813d5
 - filename: .github/workflows/publish.yml
-  checksum: 060b5b703e9a2f7e19e656994dce82e5758b4e51d483678320319b44923747e5
+  checksum: 77d83431ca4a9aad1f1a2d914b0ee4b9a23bba18cf0990662cf0a85defb9d4c7
 - filename: backend/app/models/users.py
   checksum: 40884a63218248c6fa430019c4317e0ade94b07924efee5cfa54b8342f1ad427
 version: ""
