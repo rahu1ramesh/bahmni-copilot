@@ -25,8 +25,14 @@ fileignoreconfig:
   checksum: d25302090fc0dfdd32c8357c851fb9b99b9c32610dfb1e7ff51ace9d4ba813d5
 - filename: .github/workflows/publish.yml
   checksum: 77d83431ca4a9aad1f1a2d914b0ee4b9a23bba18cf0990662cf0a85defb9d4c7
-- filename: backend/app/models/users.py
-  checksum: 40884a63218248c6fa430019c4317e0ade94b07924efee5cfa54b8342f1ad427
 - filename: backend/test/test_openai_helper.py
   checksum: ac6e1cd3d8f0f2ba915747db8b40a110763ceaa6ca5ce7d02112e71a390f735d
+- filename: backend/app/schemas/users.py
+  checksum: 20cc7df0587be43fac856c3af330e4adb2ebd2b6c132f3101f440587bd654ea9
+- filename: backend/app/models/departments.py
+  checksum: 24721f38b3a8153ea09b6bd5ed41040619c76abb4894f905517224cf98b2d0d2
+- filename: backend/app/models/users.py
+  checksum: 0805217be4c6d400b004b7c3d06b0b4f51c64d85036d3a73acda1c4cbf695de2
+- filename: backend/app/services/departments.py
+  checksum: 7fa17ce46379286c92caf625f3aa2a33ebd3c4c780c4e5a62c4460fabf7bae63
 version: ""
