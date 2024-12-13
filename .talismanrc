@@ -35,4 +35,8 @@ fileignoreconfig:
   checksum: 0805217be4c6d400b004b7c3d06b0b4f51c64d85036d3a73acda1c4cbf695de2
 - filename: backend/app/services/departments.py
   checksum: 7fa17ce46379286c92caf625f3aa2a33ebd3c4c780c4e5a62c4460fabf7bae63
+- filename: backend/example.env
+  checksum: 88c01700634c7de36f15d4e11e0f8d34313a0ab8a0fffce645f8f9a3ca379db0
+- filename: backend/README.md
+  checksum: 8d7f8a9ca09578d1d8d3efd159ba7a7d3a606493089a5a22045bcb5853241617
 version: ""
