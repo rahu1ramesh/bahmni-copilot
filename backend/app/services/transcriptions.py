@@ -33,7 +33,7 @@ class TranscriptionService:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Unsupported file type: '{file_extension}'. "
-                       f"Allowed types are: {', '.join(TranscriptionService.SUPPORTED_FILE_TYPES)}."
+                f"Allowed types are: {', '.join(TranscriptionService.SUPPORTED_FILE_TYPES)}.",
             )
 
         temp_file_path = f"/tmp/{uuid.uuid4()}.{file_extension}"
@@ -47,12 +47,25 @@ class TranscriptionService:
                 S3Utils.upload_file(file_path=temp_file_path, object_name=s3_key)
             except ValueError as e:
                 raise HTTPException(
-                    status_code=status.HTTP_424_FAILED_DEPENDENCY,
-                    detail=f"Failed to upload audio file: {str(e)}"
+                    status_code=status.HTTP_424_FAILED_DEPENDENCY, detail=f"Failed to upload audio file: {str(e)}"
                 )
             transcription_text = None
 
             transcription_text = OpenAIUtils.transcribe_audio(file_path=temp_file_path)
+
+            confidence_score = OpenAIUtils.validate_transcription(
+                transcription_text=transcription_text, form_structure=form_fields
+            )
+
+            if confidence_score.get("total") < 35:
+                fields_with_low_confidence = [
+                    field for field, score in confidence_score.items() if score < 35 and field != "total"
+                ]
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Transcription confidence score is too low. "
+                    f"Kindly review the following fields: {fields_with_low_confidence}.",
+                )
 
             context = OpenAIUtils.prepare_context(transcription_text=transcription_text, form_structure=form_fields)
 
@@ -62,7 +75,7 @@ class TranscriptionService:
                 form_id=form_id,
                 transcription_text=transcription_text,
                 status="completed",
-                context=context
+                context=context,
             )
 
             db.add(new_transcription)
