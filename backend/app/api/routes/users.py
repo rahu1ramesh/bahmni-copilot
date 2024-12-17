@@ -6,11 +6,7 @@ from app.config.database import get_db
 from app.services.auth import get_current_user, is_admin
 
 
-router = APIRouter(
-    prefix="/users",
-    tags=["Users"],
-    dependencies=[Depends(get_current_user)]
-)
+router = APIRouter(prefix="/users", tags=["Users"], dependencies=[Depends(get_current_user)])
 
 
 @router.post(

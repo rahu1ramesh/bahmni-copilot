@@ -18,10 +18,7 @@ JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 JWT_REFRESH_SECRET_KEY = os.getenv("JWT_REFRESH_SECRET_KEY")
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-auth_schema = OAuth2PasswordBearer(
-    tokenUrl="/api/auth/login",
-    scheme_name="JWT"
-)
+auth_schema = OAuth2PasswordBearer(tokenUrl="/api/auth/login", scheme_name="JWT")
 
 
 def get_hashed_password(password: str) -> str:
@@ -56,10 +53,7 @@ def get_user(db: Session, user_name: str) -> Users:
     """Retrieve a user by username."""
     user = db.query(Users).filter(Users.user_name == user_name).first()
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with username {user_name} not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with username {user_name} not found")
     return user
 
 
@@ -97,7 +91,6 @@ def is_admin(user: Users = Depends(get_current_user)):
     """Check if the user is an admin."""
     if not user.is_admin:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You do not have permission to access this resource"
+            status_code=status.HTTP_403_FORBIDDEN, detail="You do not have permission to access this resource"
         )
     return user

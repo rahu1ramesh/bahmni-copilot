@@ -16,10 +16,7 @@ class FieldsService:
     def get_field_by_id(db: Session, field_id: int) -> Field:
         field = db.query(Fields).filter(Fields.id == field_id).first()
         if not field:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Field with id {field_id} not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Field with id {field_id} not found")
         return TypeAdapter(Field).validate_python(field)
 
     @staticmethod

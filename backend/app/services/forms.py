@@ -15,10 +15,7 @@ class FormsService:
     def get_form_by_id(db: Session, form_id: int) -> Form:
         form = db.query(Forms).filter(Forms.id == form_id).first()
         if not form:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Form with id {form_id} not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Form with id {form_id} not found")
         return TypeAdapter(Form).validate_python(form)
 
     @staticmethod

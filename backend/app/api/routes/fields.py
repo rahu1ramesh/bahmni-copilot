@@ -5,11 +5,7 @@ from app.schemas.fields import FieldCreate, FieldUpdate, Field
 from app.services.fields import FieldsService
 from app.services.auth import get_current_user, is_admin
 
-router = APIRouter(
-    prefix="/fields",
-    tags=["Fields"],
-    dependencies=[Depends(get_current_user)]
-)
+router = APIRouter(prefix="/fields", tags=["Fields"], dependencies=[Depends(get_current_user)])
 
 
 @router.get("/", response_model=list[Field], status_code=status.HTTP_200_OK)

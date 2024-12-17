@@ -6,11 +6,7 @@ from app.services.forms import FormsService
 from app.services.auth import get_current_user, is_admin
 
 
-router = APIRouter(
-    prefix="/forms",
-    tags=["Forms"],
-    dependencies=[Depends(get_current_user)]
-)
+router = APIRouter(prefix="/forms", tags=["Forms"], dependencies=[Depends(get_current_user)])
 
 
 @router.get("/", response_model=list[Form], status_code=status.HTTP_200_OK)

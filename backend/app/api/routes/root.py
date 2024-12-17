@@ -4,7 +4,7 @@ from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 
 router = APIRouter()
 
-favicon_path = 'static/favicon.ico'
+favicon_path = "static/favicon.ico"
 
 
 @router.get("/", tags=["Root"], status_code=status.HTTP_200_OK)
