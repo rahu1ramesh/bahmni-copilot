@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from fastapi import status, UploadFile
 from app.main import app
@@ -10,6 +11,7 @@ from app.schemas.forms import FormCreate
 from app.services.fields import FieldsService, FieldCreate
 from app.services.forms import FormsService
 from app.models.users import Users
+from app.models.departments import Departments
 from app.models.transcriptions import Transcriptions
 from app.models.fields import Fields
 from app.models.forms import Forms
@@ -55,11 +57,12 @@ def mock_s3_utils():
 @pytest.fixture
 def mock_openai_utils():
     with patch("app.utils.openai.OpenAIUtils.transcribe_audio") as mock_transcribe, patch(
-        "app.utils.openai.OpenAIUtils.prepare_context"
-    ) as mock_prepare_context:
+        "app.utils.openai.OpenAIUtils.validate_transcription"
+    ) as mock_validate, patch("app.utils.openai.OpenAIUtils.prepare_context") as mock_prepare:
         mock_transcribe.return_value = "transcribed text"
-        mock_prepare_context.return_value = {"key": "value"}
-        yield mock_transcribe, mock_prepare_context
+        mock_validate.return_value = {"field1": 90, "total": 85}
+        mock_prepare.return_value = {"key": "value"}
+        yield mock_transcribe, mock_validate, mock_prepare
 
 
 @pytest.fixture
@@ -81,17 +84,24 @@ def test_db():
         db.query(Fields).delete()
         db.query(Forms).delete()
         db.query(Users).delete()
+        db.query(Departments).delete()
         db.commit()
         db.close()
 
 
 @pytest.fixture
 def admin_user(test_db: Session):
+    department = Departments(name="Admin Department")
+    test_db.add(department)
+    test_db.commit()
+    test_db.refresh(department)
+
     user_data = {
         "user_name": "admin",
         "name": "Admin User",
         "email": "admin@example.com",
         "password": "adminpassword",
+        "department_id": department.id,
         "is_admin": True,
     }
     user = Users(**user_data)
@@ -162,6 +172,21 @@ def test_create_transcription_endpoint(
     assert data["transcription_text"] == "transcribed text"
     assert data["status"] == "completed"
     assert data["context"] == {"key": "value"}
+
+
+def test_create_transcription_low_confidence(
+    db_session, upload_file, mock_s3_utils, mock_openai_utils, mock_fields_service
+):
+    with patch("app.utils.openai.OpenAIUtils.validate_transcription") as mock_validate:
+        mock_validate.return_value = {"field1": 20, "field2": 15, "total": 30}
+
+        with pytest.raises(HTTPException) as exc_info:
+            TranscriptionService.create_transcription(db=db_session, user_id=1, form_id=1, file=upload_file)
+
+        assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
+        assert "Transcription confidence score is too low" in exc_info.value.detail
+        assert "field1" in exc_info.value.detail
+        assert "field2" in exc_info.value.detail
 
 
 def test_create_transcription_unsupported_file_type(

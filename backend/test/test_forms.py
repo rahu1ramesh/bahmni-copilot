@@ -5,6 +5,7 @@ from app.main import app
 from app.config.database import get_db
 from app.models.forms import Forms
 from app.models.users import Users
+from app.models.departments import Departments
 from app.schemas.forms import FormCreate
 from app.services.forms import FormsService
 from app.services.auth import create_access_token
@@ -35,17 +36,24 @@ def test_db():
     finally:
         db.query(Forms).delete()
         db.query(Users).delete()
+        db.query(Departments).delete()
         db.commit()
         db.close()
 
 
 @pytest.fixture
 def admin_user(test_db: Session):
+    department = Departments(name="Admin Department")
+    test_db.add(department)
+    test_db.commit()
+    test_db.refresh(department)
+
     user_data = {
         "user_name": "admin",
         "name": "Admin User",
         "email": "admin@example.com",
         "password": "adminpassword",
+        "department_id": department.id,
         "is_admin": True,
     }
     user = Users(**user_data)

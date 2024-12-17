@@ -11,8 +11,8 @@ fileignoreconfig:
   checksum: 50eae408110a230b9d0edf391562f91ac301333c0625c4c326f81d59cc9dac04
 - filename: backend/app/services/forms.py
   checksum: 09dd63a45853c87c4efbd9258717a7acaaf56de8b56c143be423591150705633
-- filename: backend/test/api/routes/test_auth.py
-  checksum: fcc143e617775eac2e7f517f1d5adc950a30cd7f0f6292aaaab4b4b06fd0ab9a
+- filename: backend/test/test_auth.py
+  checksum: 7fca55bbf38edc21fd84f16db00f3746b36f6e7a4f7d579c5fccc4428a212681
 - filename: backend/test/api/routes/test_forms.py
   checksum: d5af291f47d018bca24e1291bdf0ce9b2242deca8abb30d16defc295004f3ab2
 - filename: backend/test/api/routes/test_fields.py
@@ -20,9 +20,9 @@ fileignoreconfig:
 - filename: backend/test/test_s3_utils.py
   checksum: 3b7e44210139bcaad3605ee35607f44214568c74abfa36dfe512b60187a25f14
 - filename: backend/test/test_transcriptions.py
-  checksum: 1483215612f9002ba46b1a6d91f573dff7ec18ea302e823d468dbd8003daa33d
+  checksum: eb4e65eef6506514aa38e33bf668c1810390255602f519d4931beb57c4beef84
 - filename: backend/test/test_users.py
-  checksum: d25302090fc0dfdd32c8357c851fb9b99b9c32610dfb1e7ff51ace9d4ba813d5
+  checksum: 1fe5db30141fe342a0348848884c7eb180c38fc69c0f43ea6c372499991679fb
 - filename: .github/workflows/publish.yml
   checksum: 77d83431ca4a9aad1f1a2d914b0ee4b9a23bba18cf0990662cf0a85defb9d4c7
 - filename: backend/test/test_openai_helper.py
@@ -39,4 +39,6 @@ fileignoreconfig:
   checksum: 88c01700634c7de36f15d4e11e0f8d34313a0ab8a0fffce645f8f9a3ca379db0
 - filename: backend/README.md
   checksum: 8d7f8a9ca09578d1d8d3efd159ba7a7d3a606493089a5a22045bcb5853241617
+- filename: backend/test/test_departments.py
+  checksum: 4cabc72874c43c739d0867da6351de9ad8c2dfffd0ea683129c393a967d65299
 version: ""

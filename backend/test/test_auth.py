@@ -50,6 +50,8 @@ def test_sign_up(test_db: Session):
         "name": "Test User",
         "email": "testuser@example.com",
         "password": "testpassword",
+        "specialty": "General Medicine",
+        "department_id": 1,
     }
     response = client.post("/api/auth/signup", json=user_data)
     assert response.status_code == 201
@@ -59,7 +61,12 @@ def test_sign_up(test_db: Session):
 @pytest.fixture
 def default_user(test_db: Session):
     user_data = UserCreate(
-        user_name="testuser", name="Test User", email="testuser@example.com", password="testpassword"
+        user_name="testuser",
+        name="Test User",
+        email="testuser@example.com",
+        password="testpassword",
+        specialty="General Medicine",
+        department_id=1,
     )
     UsersService.create_user(test_db, user_data)
     return user_data
