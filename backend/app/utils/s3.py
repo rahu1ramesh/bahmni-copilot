@@ -46,8 +46,7 @@ class S3Utils:
 
         if not os.path.exists(file_path):
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"File '{file_path}' does not exist."
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"File '{file_path}' does not exist."
             )
 
         if object_name is None:
@@ -59,26 +58,21 @@ class S3Utils:
             logging.info(f"File '{file_path}' uploaded to bucket '{bucket_name}' as '{object_name}'.")
         except EndpointConnectionError:
             raise HTTPException(
-                status_code=status.HTTP_424_FAILED_DEPENDENCY,
-                detail="Failed to connect to S3 endpoint."
+                status_code=status.HTTP_424_FAILED_DEPENDENCY, detail="Failed to connect to S3 endpoint."
             )
         except S3UploadFailedError as e:
             raise HTTPException(
-                status_code=status.HTTP_424_FAILED_DEPENDENCY,
-                detail=f"Failed to upload file to S3: {e}"
+                status_code=status.HTTP_424_FAILED_DEPENDENCY, detail=f"Failed to upload file to S3: {e}"
             )
         except NoCredentialsError:
             raise HTTPException(
-                status_code=status.HTTP_424_FAILED_DEPENDENCY,
-                detail="S3 credentials not provided or incorrect."
+                status_code=status.HTTP_424_FAILED_DEPENDENCY, detail="S3 credentials not provided or incorrect."
             )
         except PartialCredentialsError:
             raise HTTPException(
-                status_code=status.HTTP_424_FAILED_DEPENDENCY,
-                detail="Incomplete S3 credentials provided."
+                status_code=status.HTTP_424_FAILED_DEPENDENCY, detail="Incomplete S3 credentials provided."
             )
         except ClientError as e:
             raise HTTPException(
-                status_code=status.HTTP_424_FAILED_DEPENDENCY,
-                detail=f"Failed to upload file to S3: {e}"
+                status_code=status.HTTP_424_FAILED_DEPENDENCY, detail=f"Failed to upload file to S3: {e}"
             )
