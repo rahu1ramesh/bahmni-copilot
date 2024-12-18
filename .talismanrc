@@ -24,7 +24,7 @@ fileignoreconfig:
 - filename: backend/test/test_users.py
   checksum: 1fe5db30141fe342a0348848884c7eb180c38fc69c0f43ea6c372499991679fb
 - filename: .github/workflows/publish.yml
-  checksum: 77d83431ca4a9aad1f1a2d914b0ee4b9a23bba18cf0990662cf0a85defb9d4c7
+  checksum: 914e74a52d1a9dfc16236eef355ea91fd648100910e2543aeaea8adfc9507ff2
 - filename: backend/test/test_openai_helper.py
   checksum: ac6e1cd3d8f0f2ba915747db8b40a110763ceaa6ca5ce7d02112e71a390f735d
 - filename: backend/app/schemas/users.py
