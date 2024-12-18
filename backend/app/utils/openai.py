@@ -200,10 +200,12 @@ class OpenAIUtils:
                 temperature=0.2,
                 top_p=1,
                 messages=[
-                    {"role": "system", "content":
-                        f"You are an {department.name} expert specializing in {user.specialty}. "
+                    {
+                        "role": "system",
+                        "content": f"You are an {department.name} expert specializing in {user.specialty}. "
                         f"Your task is to analyze a patient's comprehensive medical profile based on patient "
-                        f"demographics, medical history, observations, conditions, and allergies."},
+                        f"demographics, medical history, observations, conditions, and allergies.",
+                    },
                     {
                         "role": "user",
                         "content": prompt,

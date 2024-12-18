@@ -42,5 +42,9 @@ class DepartmentsService:
     @staticmethod
     def delete_department(db: Session, department_id: int) -> None:
         department = db.query(Departments).filter(Departments.id == department_id).first()
+        if not department:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail=f"Department with id {department_id} not found"
+            )
         db.delete(department)
         db.commit()

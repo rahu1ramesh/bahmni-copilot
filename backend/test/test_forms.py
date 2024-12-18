@@ -115,3 +115,9 @@ def test_delete_form(test_db: Session, auth_headers):
     form = FormsService.create_form(test_db, form_data)
     response = client.delete(f"/api/forms/{form.id}", headers=auth_headers)
     assert response.status_code == 204
+
+
+def test_delete_form_not_found(auth_headers):
+    response = client.delete("/api/forms/999", headers=auth_headers)
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Form with id 999 not found"

@@ -47,6 +47,19 @@ def test_db():
 
 
 def test_sign_up(test_db: Session):
+    department = Departments(name="Admin Department")
+    test_db.add(department)
+    test_db.commit()
+    test_db.refresh(department)
+
+    user_data = UserCreate(
+        user_name="testuser",
+        name="Test User",
+        email="testuser@example.com",
+        password="testpassword",
+        specialty="General Medicine",
+        department_id=department.id,
+    )
     user_data = {
         "user_name": "testuser",
         "name": "Test User",

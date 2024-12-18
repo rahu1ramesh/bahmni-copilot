@@ -12,7 +12,7 @@ fileignoreconfig:
 - filename: backend/app/services/forms.py
   checksum: 09dd63a45853c87c4efbd9258717a7acaaf56de8b56c143be423591150705633
 - filename: backend/test/test_auth.py
-  checksum: 7fca55bbf38edc21fd84f16db00f3746b36f6e7a4f7d579c5fccc4428a212681
+  checksum: 9c7939c17bee2ebc6496742fe73b1e1e14e0d6d3ecfe313cec8743c837946f25
 - filename: backend/test/api/routes/test_forms.py
   checksum: d5af291f47d018bca24e1291bdf0ce9b2242deca8abb30d16defc295004f3ab2
 - filename: backend/test/api/routes/test_fields.py
@@ -22,7 +22,7 @@ fileignoreconfig:
 - filename: backend/test/test_transcriptions.py
   checksum: eb4e65eef6506514aa38e33bf668c1810390255602f519d4931beb57c4beef84
 - filename: backend/test/test_users.py
-  checksum: 1fe5db30141fe342a0348848884c7eb180c38fc69c0f43ea6c372499991679fb
+  checksum: 918dc113d9501c11cd7441fba6f8905df8130a5b8eaf1b86819608647f85c600
 - filename: .github/workflows/publish.yml
   checksum: 914e74a52d1a9dfc16236eef355ea91fd648100910e2543aeaea8adfc9507ff2
 - filename: backend/test/test_openai_helper.py
@@ -40,7 +40,7 @@ fileignoreconfig:
 - filename: backend/README.md
   checksum: 8d7f8a9ca09578d1d8d3efd159ba7a7d3a606493089a5a22045bcb5853241617
 - filename: backend/test/test_departments.py
-  checksum: 4cabc72874c43c739d0867da6351de9ad8c2dfffd0ea683129c393a967d65299
+  checksum: d6c720b271a622d54f1abc13ce10fb11aabfd8d782ba54c115d0f9a10f6ed629
 - filename: backend/app/core/emr_client.py
   checksum: e8d3c68d89ac1ba63eebefe853382251ba9cb1fd0880e01af99e200a1020b770
 - filename: backend/app/core/emr_client.py

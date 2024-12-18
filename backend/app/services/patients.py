@@ -10,7 +10,6 @@ from app.schemas.patients import (
 from app.schemas.users import User
 from app.schemas.departments import Department
 from typing import List
-from pydantic import ValidationError
 from app.utils.openai import OpenAIUtils
 
 
@@ -42,7 +41,5 @@ class PatientService:
             return patient_diagnosis
         except HTTPException as e:
             raise e
-        except ValidationError as e:
-            raise HTTPException(status_code=422, detail=f"Data Validation Error: {e}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Internal Server Error: {e}")

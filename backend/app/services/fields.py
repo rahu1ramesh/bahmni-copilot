@@ -48,5 +48,7 @@ class FieldsService:
     @staticmethod
     def delete_field(db: Session, field_id: int) -> None:
         field = db.query(Fields).filter(Fields.id == field_id).first()
+        if not field:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Field with id {field_id} not found")
         db.delete(field)
         db.commit()

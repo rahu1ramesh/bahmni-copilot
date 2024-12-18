@@ -40,5 +40,7 @@ class FormsService:
     @staticmethod
     def delete_form(db: Session, form_id: int) -> None:
         form = db.query(Forms).filter(Forms.id == form_id).first()
+        if not form:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Form with id {form_id} not found")
         db.delete(form)
         db.commit()

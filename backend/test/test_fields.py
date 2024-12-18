@@ -135,3 +135,9 @@ def test_delete_field(test_db: Session, auth_headers, create_form):
     field = FieldsService.create_field(test_db, field_data)
     response = client.delete(f"/api/fields/{field.id}", headers=auth_headers)
     assert response.status_code == 204
+
+
+def test_delete_field_not_found(test_db: Session, auth_headers, create_form):
+    response = client.delete("/api/fields/999", headers=auth_headers)
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Field with id 999 not found"

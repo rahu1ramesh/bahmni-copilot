@@ -119,6 +119,19 @@ def test_create_user_with_existing_user_name(test_db: Session, auth_headers):
     assert response.status_code == 409
 
 
+def test_create_user_with_incorrect_department_id(test_db: Session, auth_headers):
+    user_data = {
+        "name": "New User 2",
+        "user_name": "newuser2",
+        "email": "newuser2@example.com",
+        "password": "newpassword",
+        "department_id": 5,
+    }
+    response = client.post("/api/users/", json=user_data, headers=auth_headers)
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Department with id 5 not found"
+
+
 def test_create_user_with_existing_email(test_db: Session, auth_headers):
     user_data = {
         "name": "New User",
@@ -202,6 +215,26 @@ def test_update_user_by_non_admin_user(test_db: Session, non_auth_headers):
     update_data = {"name": "Updated User", "user_name": "testuser2", "email": "updateduser@example.com"}
     response = client.put(f"/api/users/{user.id}", json=update_data, headers=non_auth_headers)
     assert response.status_code == 403
+
+
+def test_update_user_with_incorrect_department_id(test_db: Session, auth_headers):
+    user_data = UserCreate(
+        name="Test User",
+        user_name="testuser",
+        email="testuser@example.com",
+        password="testpassword",
+        department_id=1,
+    )
+    user = UsersService.create_user(test_db, user_data)
+    update_data = {
+        "name": "Updated User",
+        "user_name": "testuser2",
+        "email": "updateduser@example.com",
+        "department_id": 5,
+    }
+    response = client.put(f"/api/users/{user.id}", json=update_data, headers=auth_headers)
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Department with id 5 not found"
 
 
 def test_update_user_not_found(test_db: Session, auth_headers):
