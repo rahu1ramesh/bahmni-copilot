@@ -14,21 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
-
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_DATABASE: test_db
-          MYSQL_USER: test_user
-          MYSQL_PASSWORD: test_password
-          MYSQL_ROOT_PASSWORD: root_password
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=5
-
     env:
-      DATABASE_URL: "sqlite:///./bahmni.db"
+      DATABASE_URL: "sqlite:///./test.db"
       JWT_SECRET_KEY: "15c6e7253abfde9f7012e44b8f14320f12e91874"
       JWT_REFRESH_SECRET_KEY: "a161ce62993602724bb8106b715a8179"
 
