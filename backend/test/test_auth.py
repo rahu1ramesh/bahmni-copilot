@@ -6,6 +6,7 @@ from app.config.database import get_db
 from app.schemas.users import UserCreate
 from app.services.users import UsersService
 from app.models.users import Users
+from app.models.departments import Departments
 from app.services.auth import (
     JWT_SECRET_KEY,
     ALGORITHM,
@@ -40,6 +41,7 @@ def test_db():
         yield db
     finally:
         db.query(Users).delete()
+        db.query(Departments).delete()
         db.commit()
         db.close()
 
@@ -60,13 +62,18 @@ def test_sign_up(test_db: Session):
 
 @pytest.fixture
 def default_user(test_db: Session):
+    department = Departments(name="Admin Department")
+    test_db.add(department)
+    test_db.commit()
+    test_db.refresh(department)
+
     user_data = UserCreate(
         user_name="testuser",
         name="Test User",
         email="testuser@example.com",
         password="testpassword",
         specialty="General Medicine",
-        department_id=1,
+        department_id=department.id,
     )
     UsersService.create_user(test_db, user_data)
     return user_data
