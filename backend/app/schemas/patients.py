@@ -54,9 +54,6 @@ class Patient(BaseModel):
 
     @model_validator(mode="before")
     def custom_mapper(cls, values):
-        meta = values.get("meta", {})
-        values["version_id"] = meta.get("versionId")
-        values["last_updated"] = meta.get("lastUpdated")
         identifiers = values.get("identifier", [])
         if identifiers:
             values["identifier"] = identifiers[0].get("value")

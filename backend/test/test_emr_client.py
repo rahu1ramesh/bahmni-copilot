@@ -1,6 +1,7 @@
 import pytest
 from fastapi import HTTPException
 from app.core.emr_client import EMRClient
+import requests
 
 
 @pytest.fixture
@@ -144,3 +145,53 @@ def test_fetch_authentication_error(requests_mock, emr_client):
         emr_client._fetch(endpoint)
     assert exc_info.value.status_code == 401
     assert "Failed to authenticate with EMR service" in exc_info.value.detail
+
+
+def test_fetch_request_exception(requests_mock, emr_client):
+    endpoint = "Patient/123"
+    requests_mock.get(f"{emr_client.base_url}/{endpoint}", exc=requests.exceptions.RequestException("Request failed"))
+
+    with pytest.raises(HTTPException) as exc_info:
+        emr_client._fetch(endpoint)
+    assert exc_info.value.status_code == 500
+    assert "Error occurred while fetching data: Request failed" in exc_info.value.detail
+
+
+def test_get_patient_data_not_found_exception(requests_mock, emr_client):
+    patient_id = "123"
+    requests_mock.get(f"{emr_client.base_url}/Patient/{patient_id}", json={})
+
+    with pytest.raises(HTTPException) as exc_info:
+        emr_client.get_patient_data(patient_id)
+    assert exc_info.value.status_code == 404
+    assert f"Patient with ID {patient_id} not found" in exc_info.value.detail
+
+
+def test_get_observations_not_found_exception(requests_mock, emr_client):
+    patient_id = "123"
+    requests_mock.get(f"{emr_client.base_url}/Observation?subject:Patient={patient_id}", json={})
+
+    with pytest.raises(HTTPException) as exc_info:
+        emr_client.get_observations(patient_id)
+    assert exc_info.value.status_code == 404
+    assert f"Observations for patient with ID {patient_id} not found" in exc_info.value.detail
+
+
+def test_get_conditions_not_found_exception(requests_mock, emr_client):
+    patient_id = "123"
+    requests_mock.get(f"{emr_client.base_url}/Condition?patient={patient_id}", json={})
+
+    with pytest.raises(HTTPException) as exc_info:
+        emr_client.get_conditions(patient_id)
+    assert exc_info.value.status_code == 404
+    assert f"Conditions for patient with ID {patient_id} not found" in exc_info.value.detail
+
+
+def test_get_allergy_details_not_found_exception(requests_mock, emr_client):
+    patient_id = "123"
+    requests_mock.get(f"{emr_client.base_url}/AllergyIntolerance?patient={patient_id}", json={})
+
+    with pytest.raises(HTTPException) as exc_info:
+        emr_client.get_allergy_details(patient_id)
+    assert exc_info.value.status_code == 404
+    assert f"Allergy details for patient with ID {patient_id} not found" in exc_info.value.detail

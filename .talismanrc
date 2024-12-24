@@ -45,4 +45,6 @@ fileignoreconfig:
   checksum: e8d3c68d89ac1ba63eebefe853382251ba9cb1fd0880e01af99e200a1020b770
 - filename: backend/app/core/emr_client.py
   checksum: e8d3c68d89ac1ba63eebefe853382251ba9cb1fd0880e01af99e200a1020b770
+- filename: backend/test/test_patients.py
+  checksum: b328c0b4963dd0b71ebe3493757c93274506d28dacaf5ffe03749a4df786e634
 version: ""
