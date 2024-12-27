@@ -48,5 +48,5 @@ fileignoreconfig:
 - filename: backend/test/test_patients.py
   checksum: b328c0b4963dd0b71ebe3493757c93274506d28dacaf5ffe03749a4df786e634
 - filename: frontend/package-lock.json
-  checksum: 26035ca7f5829001a1841a3397a6a107ae94729a7c9acfbbce11058069d5b37f
+  checksum: 234849f36e191434d86fdb0cc794c127817422b75dd1faf7fe5a0548f5036a04
 version: ""
