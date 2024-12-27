@@ -23,6 +23,24 @@ repos:
         language: system
         types: [python]
 
+      - id: prettier
+        name: prettier
+        entry: cd frontend && npm run format
+        language: system
+        types: [file]
+
+      - id: eslint
+        name: eslint
+        entry: cd frontend && npm run lint
+        language: system
+        types: [file]
+
+      - id: eslint-fix
+        name: eslint-fix
+        entry: cd frontend && npm run lint:fix
+        language: system
+        types: [file]
+
   - repo: https://github.com/thoughtworks/talisman
     rev: 'v1.32.0'
     hooks:
