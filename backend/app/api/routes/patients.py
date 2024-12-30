@@ -4,6 +4,7 @@ from app.config.database import get_db
 from app.services.auth import get_current_user
 from app.services.patients import PatientService
 from app.services.departments import DepartmentsService
+from app.services.providers import ProvidersService
 from app.core.emr_client import EMRClient
 
 emr_client = EMRClient()
@@ -24,6 +25,7 @@ async def get_patient_context(
     :return: A detailed patient summary as a dictionary.
     :raises HTTPException: If the AI response parsing fails.
     """
-    department = DepartmentsService.get_department_by_id(db, user_data.department_id)
+    provider = ProvidersService.get_provider_by_id(db, user_data.id)
+    department = DepartmentsService.get_department_by_id(db, provider.department_id)
     patient_context = patient_service.get_patient_context(patient_id, user_data, department)
     return patient_context
