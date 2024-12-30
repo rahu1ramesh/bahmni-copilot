@@ -46,17 +46,11 @@ def test_db():
 
 @pytest.fixture
 def admin_user(test_db: Session):
-    department = Departments(name="Admin Department")
-    test_db.add(department)
-    test_db.commit()
-    test_db.refresh(department)
 
     user_data = {
         "user_name": "admin",
-        "name": "Admin User",
         "email": "admin@example.com",
         "password": "adminpassword",
-        "department_id": department.id,
         "is_admin": True,
     }
     user = Users(**user_data)
@@ -68,17 +62,11 @@ def admin_user(test_db: Session):
 
 @pytest.fixture
 def non_admin_user(test_db: Session):
-    department = Departments(name="Test Department")
-    test_db.add(department)
-    test_db.commit()
-    test_db.refresh(department)
 
     user_data = {
         "user_name": "nonadmin",
-        "name": "Non Admin User",
         "email": "nonadmin@example.com",
         "password": "nonadminpassword",
-        "department_id": department.id,
         "is_admin": False,
     }
     user = Users(**user_data)

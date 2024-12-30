@@ -12,4 +12,4 @@ class Departments(Base):
     created_at = Column(TIMESTAMP(timezone=False), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=False), nullable=False, server_default=func.now(), onupdate=func.now())
 
-    users = relationship("Users", back_populates="department", cascade="all, delete-orphan")
+    providers = relationship("Providers", back_populates="department", cascade="all, delete-orphan")

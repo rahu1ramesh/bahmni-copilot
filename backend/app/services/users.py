@@ -3,7 +3,6 @@ from fastapi import HTTPException, status
 from pydantic import TypeAdapter
 from typing import List
 from app.models.users import Users
-from app.models.departments import Departments
 from app.schemas.users import UserCreate, UserUpdate, User
 from app.services.auth import get_hashed_password
 
@@ -32,11 +31,6 @@ class UsersService:
     def create_user(db: Session, user_data: UserCreate) -> User:
         existing_email = db.query(Users).filter(Users.email == user_data.email).first()
         existing_user_name = db.query(Users).filter(Users.user_name == user_data.user_name).first()
-        department = db.query(Departments).filter(Departments.id == user_data.department_id).first()
-        if not department:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail=f"Department with id {user_data.department_id} not found"
-            )
         if existing_email:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT, detail=f"User with email id {user_data.email} already exist."
@@ -57,13 +51,6 @@ class UsersService:
     @staticmethod
     def update_user(db: Session, user_id: int, user_data: UserUpdate) -> User:
         new_user = db.query(Users).filter(Users.id == user_id).first()
-        if user_data.department_id is not None:
-            department = db.query(Departments).filter(Departments.id == user_data.department_id).first()
-            if not department:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"Department with id {user_data.department_id} not found",
-                )
         if not new_user:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with user_id {user_id} not found")
         for key, value in user_data.model_dump(exclude_unset=True).items():

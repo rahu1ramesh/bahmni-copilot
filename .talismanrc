@@ -22,7 +22,7 @@ fileignoreconfig:
 - filename: backend/test/test_transcriptions.py
   checksum: eb4e65eef6506514aa38e33bf668c1810390255602f519d4931beb57c4beef84
 - filename: backend/test/test_users.py
-  checksum: 918dc113d9501c11cd7441fba6f8905df8130a5b8eaf1b86819608647f85c600
+  checksum: 39fe136e4aa548c2827dcb8adb814a966f87ba105edc570ed94d0f280e9da462
 - filename: .github/workflows/publish.yml
   checksum: 914e74a52d1a9dfc16236eef355ea91fd648100910e2543aeaea8adfc9507ff2
 - filename: backend/test/test_openai_helper.py
@@ -49,4 +49,10 @@ fileignoreconfig:
   checksum: b328c0b4963dd0b71ebe3493757c93274506d28dacaf5ffe03749a4df786e634
 - filename: frontend/package-lock.json
   checksum: f5f142b98df1d369b9024028f20a76a4b5aa5013791d8e018c17f2cec7316ed8
+- filename: backend/app/models/providers.py
+  checksum: 59b303b4db73e67640f7eb0c10fd082ec67d6d2963871bb62d8fdfd16c157460
+- filename: backend/app/services/providers.py
+  checksum: 74324df48762d5d5533c4cf8fecc664a76c5f97fc0cfde77375d9a53ba1026e6
+- filename: backend/test/test_providers.py
+  checksum: 98606bf8988c129ab35459842034b00860bb46953df5ea5942dc17cd2144e3f0
 version: ""

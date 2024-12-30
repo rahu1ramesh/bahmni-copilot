@@ -18,7 +18,9 @@ from app.schemas.users import User
 from app.schemas.departments import Department
 from app.models.departments import Departments
 from app.models.users import Users
+from app.models.providers import Providers
 from app.services.departments import DepartmentsService
+from app.services.providers import ProvidersService
 from app.services.patients import PatientService
 from app.services.auth import create_access_token
 
@@ -35,11 +37,6 @@ def db_session():
 
 
 @pytest.fixture
-def current_user():
-    return {"department_id": 1}
-
-
-@pytest.fixture
 def emr_client_mock():
     return Mock(spec=EMRClient)
 
@@ -47,6 +44,11 @@ def emr_client_mock():
 @pytest.fixture
 def departments_service_mock():
     return Mock(spec=DepartmentsService)
+
+
+@pytest.fixture
+def providers_service_mock():
+    return Mock(spec=ProvidersService)
 
 
 @pytest.fixture
@@ -58,11 +60,8 @@ def patient_service(emr_client_mock):
 def user():
     return User(
         id=1,
-        name="Test User",
         user_name="Test User",
         email="testuser@example.com",
-        specialty="General",
-        department_id=1,
         is_admin=False,
         created_at="2023-01-01T00:00:00Z",
         updated_at="2023-01-01T00:00:00Z",
@@ -77,6 +76,7 @@ def test_db():
     try:
         yield db
     finally:
+        db.query(Providers).delete()
         db.query(Users).delete()
         db.query(Departments).delete()
         db.commit()
@@ -85,23 +85,36 @@ def test_db():
 
 @pytest.fixture
 def admin_user(test_db: Session):
-    department = Departments(name="Admin Department")
-    test_db.add(department)
-    test_db.commit()
-    test_db.refresh(department)
 
     user_data = {
         "user_name": "admin",
-        "name": "Admin User",
         "email": "admin@example.com",
         "password": "adminpassword",
-        "department_id": department.id,
         "is_admin": True,
     }
     user = Users(**user_data)
     test_db.add(user)
     test_db.commit()
     test_db.refresh(user)
+
+    department_data = {
+        "name": "Test Department",
+    }
+    department = Departments(**department_data)
+    test_db.add(department)
+    test_db.commit()
+    test_db.refresh(department)
+
+    provider_data = {
+        "name": "Test Provider",
+        "user_id": user.id,
+        "specialty": "General Medicine",
+        "department_id": department.id,
+    }
+    provider = Providers(**provider_data)
+    test_db.add(provider)
+    test_db.commit()
+    test_db.refresh(provider)
     return user
 
 
@@ -165,7 +178,6 @@ def test_user_without_department_access(patient_service, emr_client_mock, user, 
     emr_client_mock.get_patient_data.return_value = None
 
     with pytest.raises(HTTPException) as exc_info:
-        user.department_id = 999
         patient_service.get_patient_context("patient123", user, department)
     assert exc_info.value.status_code == 404
     assert exc_info.value.detail == "Patient not found"
@@ -314,11 +326,11 @@ def test_observation_resource_custom_mapper():
     assert observation.code == CodeableConcept(coding=None, text=None)
 
 
-def test_get_patient_context(db_session, current_user, patient_service, departments_service_mock, auth_headers):
-    with patch("app.api.routes.patients.get_db", return_value=db_session), patch(
-        "app.api.routes.patients.get_current_user", return_value=current_user
-    ), patch(
+def test_get_patient_context(db_session, patient_service, departments_service_mock, auth_headers):
+    with patch(
         "app.api.routes.patients.DepartmentsService.get_department_by_id", return_value=departments_service_mock
+    ), patch(
+        "app.api.routes.patients.ProvidersService.get_provider_by_user_id", return_value=providers_service_mock
     ), patch(
         "app.api.routes.patients.patient_service.get_patient_context", return_value="Patient Summary"
     ):
@@ -327,13 +339,11 @@ def test_get_patient_context(db_session, current_user, patient_service, departme
         assert response.json() == "Patient Summary"
 
 
-def test_get_patient_context_not_found(
-    db_session, current_user, patient_service, departments_service_mock, auth_headers
-):
-    with patch("app.api.routes.patients.get_db", return_value=db_session), patch(
-        "app.api.routes.patients.get_current_user", return_value=current_user
-    ), patch(
+def test_get_patient_context_not_found(db_session, patient_service, departments_service_mock, auth_headers):
+    with patch(
         "app.api.routes.patients.DepartmentsService.get_department_by_id", return_value=departments_service_mock
+    ), patch(
+        "app.api.routes.patients.ProvidersService.get_provider_by_user_id", return_value=providers_service_mock
     ), patch(
         "app.api.routes.patients.patient_service.get_patient_context",
         side_effect=HTTPException(status_code=404, detail="Patient not found"),
@@ -344,12 +354,12 @@ def test_get_patient_context_not_found(
 
 
 def test_get_patient_context_internal_server_exception(
-    db_session, current_user, patient_service, departments_service_mock, auth_headers
+    db_session, patient_service, departments_service_mock, auth_headers
 ):
-    with patch("app.api.routes.patients.get_db", return_value=db_session), patch(
-        "app.api.routes.patients.get_current_user", return_value=current_user
-    ), patch(
+    with patch(
         "app.api.routes.patients.DepartmentsService.get_department_by_id", return_value=departments_service_mock
+    ), patch(
+        "app.api.routes.patients.ProvidersService.get_provider_by_user_id", return_value=providers_service_mock
     ), patch(
         "app.api.routes.patients.patient_service.get_patient_context",
         side_effect=HTTPException(status_code=500, detail="Internal Server Error"),
