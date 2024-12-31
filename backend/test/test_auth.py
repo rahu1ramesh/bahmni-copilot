@@ -132,14 +132,15 @@ def test_get_user_not_found(test_db: Session):
 
 
 def test_get_user_not_found_with_invalid_user_id(test_db: Session):
+    invalid_payloads = {"exp": datetime.utcnow() + timedelta(hours=1), "sub": "12"}
+    invalid_token = jwt.encode(invalid_payloads, JWT_REFRESH_SECRET_KEY, algorithm=ALGORITHM)
     with pytest.raises(HTTPException) as exc_info:
         validate_refresh_token(
             test_db,
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYyMTY1OTYsInN1YiI6IjEifQ" +
-            ".TPFOwEXxo8i3cTwK8N5_WFYLe058nKGDz4hg4QwDEcg",
+            invalid_token
         )
     assert exc_info.value.status_code == 404
-    assert exc_info.value.detail == "User with id 1 not found"
+    assert exc_info.value.detail == "User with id 12 not found"
 
 
 def test_authenticate_user_not_found(test_db: Session):
