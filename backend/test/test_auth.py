@@ -10,6 +10,9 @@ from app.services.auth import (
     JWT_SECRET_KEY,
     ALGORITHM,
     authenticate_user,
+    get_current_user,
+    validate_refresh_token,
+    JWT_REFRESH_SECRET_KEY,
 )
 from jose import jwt
 from datetime import datetime, timedelta
@@ -58,7 +61,9 @@ def test_sign_up(test_db: Session):
     }
     response = client.post("/api/auth/signup", json=user_data)
     assert response.status_code == 201
-    assert response.json()["email"] == user_data["email"]
+    tokens = response.json()
+    assert "access_token" in tokens
+    assert "refresh_token" in tokens
 
 
 @pytest.fixture
@@ -93,11 +98,48 @@ def test_login_invalid_credentials(test_db: Session, default_user):
     assert response.json()["detail"] == "Invalid username or password"
 
 
+def test_refresh(test_db: Session, default_user):
+    login_data = {"username": default_user.user_name, "password": default_user.password}
+    response = client.post(
+        "/api/auth/login", data=login_data, headers={"content-type": "application/x-www-form-urlencoded"}
+    )
+    assert response.status_code == 200
+    tokens = response.json()
+    refresh_token = tokens["refresh_token"]
+    response = client.post(
+        "/api/auth/refresh", json={"refresh_token": refresh_token}, headers={"accept": "application/json"}
+    )
+    assert response.status_code == 200
+    tokens = response.json()
+    assert "access_token" in tokens
+    assert "refresh_token" in tokens
+    assert tokens["refresh_token"] == refresh_token
+
+
+def test_refresh_with_invalid_refresh_token(test_db: Session, default_user):
+    response = client.post(
+        "/api/auth/refresh", json={"refresh_token": "refresh_token"}, headers={"accept": "application/json"}
+    )
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid refresh token"
+
+
 def test_get_user_not_found(test_db: Session):
     with pytest.raises(HTTPException) as exc_info:
         authenticate_user(test_db, "nonexistentuser", "password")
     assert exc_info.value.status_code == 404
     assert exc_info.value.detail == "User with username nonexistentuser not found"
+
+
+def test_get_user_not_found_with_invalid_user_id(test_db: Session):
+    with pytest.raises(HTTPException) as exc_info:
+        validate_refresh_token(
+            test_db,
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzYyMTY1OTYsInN1YiI6IjEifQ" +
+            ".TPFOwEXxo8i3cTwK8N5_WFYLe058nKGDz4hg4QwDEcg",
+        )
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.detail == "User with id 1 not found"
 
 
 def test_authenticate_user_not_found(test_db: Session):
@@ -112,6 +154,13 @@ def test_authenticate_user_invalid_password(test_db: Session, default_user):
     assert exc_info.value.detail == "Invalid username or password"
 
 
+def test_authenticate_user_invalid_username(test_db: Session, default_user):
+    with pytest.raises(HTTPException) as exc_info:
+        authenticate_user(test_db, "wrongusername", "wrongpassword")
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.detail == "User with username wrongusername not found"
+
+
 def test_get_current_user_invalid_token(test_db: Session):
     invalid_token = "invalidtoken"
     response = client.get("/api/users/me", headers={"Authorization": f"Bearer {invalid_token}"})
@@ -120,9 +169,44 @@ def test_get_current_user_invalid_token(test_db: Session):
 
 
 def test_get_current_user_no_sub(test_db: Session):
-    payload = {"exp": datetime.utcnow() + timedelta(minutes=30)}
+    payload = {"exp": datetime.utcnow() + timedelta(hours=1)}
     token = jwt.encode(payload, JWT_SECRET_KEY, algorithm=ALGORITHM)
+    with pytest.raises(HTTPException) as exc_info:
+        get_current_user(test_db, token)
+    assert exc_info.value.status_code == 401
+    assert exc_info.value.detail == "Invalid credentials"
 
-    response = client.get("/api/users/me", headers={"Authorization": f"Bearer {token}"})
+
+def test_invalid_refresh_token_payload(test_db: Session):
+    invalid_payloads = {"exp": datetime.utcnow() + timedelta(hours=1), "sub": "12"}
+    invalid_token = jwt.encode(invalid_payloads, JWT_REFRESH_SECRET_KEY, algorithm=ALGORITHM)
+    response = client.post(
+        "/api/auth/refresh", json={"refresh_token": invalid_token}, headers={"accept": "application/json"}
+    )
+    assert response.status_code == 404
+    assert response.json()["detail"] == "User with id 12 not found"
+
+
+def test_expired_refresh_token(test_db: Session):
+    expired_payload = {
+        "exp": datetime.utcnow(),
+        "sub": "1",
+    }
+    expired_token = jwt.encode(expired_payload, JWT_REFRESH_SECRET_KEY, algorithm=ALGORITHM)
+    response = client.post(
+        "/api/auth/refresh", json={"refresh_token": expired_token}, headers={"accept": "application/json"}
+    )
     assert response.status_code == 401
-    assert response.json()["detail"] == "Invalid credentials"
+    assert response.json()["detail"] == "Invalid refresh token"
+
+
+def test_missing_sub_in_refresh_token(test_db: Session):
+    invalid_payload = {
+        "exp": datetime.utcnow() + timedelta(hours=1),
+    }
+    invalid_token = jwt.encode(invalid_payload, JWT_REFRESH_SECRET_KEY, algorithm=ALGORITHM)
+    response = client.post(
+        "/api/auth/refresh", json={"refresh_token": invalid_token}, headers={"accept": "application/json"}
+    )
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid refresh token"

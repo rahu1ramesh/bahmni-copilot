@@ -49,7 +49,7 @@ def create_refresh_token(subject: Union[str, Any]) -> str:
     return create_token(subject, JWT_REFRESH_SECRET_KEY, timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES))
 
 
-def get_user(db: Session, user_name: str) -> Users:
+def get_user_by_user_name(db: Session, user_name: str) -> Users:
     """Retrieve a user by username."""
     user = db.query(Users).filter(Users.user_name == user_name).first()
     if not user:
@@ -57,9 +57,17 @@ def get_user(db: Session, user_name: str) -> Users:
     return user
 
 
+def get_user_by_user_id(db: Session, user_id: str) -> Users:
+    """Retrieve a user by username."""
+    user = db.query(Users).filter(Users.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {user_id} not found")
+    return user
+
+
 def authenticate_user(db: Session, user_name: str, password: str) -> User:
     """Authenticate a user by username and password."""
-    user = get_user(db, user_name)
+    user = get_user_by_user_name(db, user_name)
     if not user or not verify_password(password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -81,7 +89,7 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(auth_sc
         user_name: str = payload.get("sub")
         if user_name is None:
             raise credentials_exception
-        user = get_user(db, user_name=user_name)
+        user = get_user_by_user_name(db, user_name=user_name)
         return user
     except JWTError:
         raise credentials_exception
@@ -94,3 +102,27 @@ def is_admin(user: Users = Depends(get_current_user)):
             status_code=status.HTTP_403_FORBIDDEN, detail="You do not have permission to access this resource"
         )
     return user
+
+
+def validate_refresh_token(db: Session, refresh_token: str) -> User:
+    """
+    Validate a refresh token. Returns True if valid, False otherwise.
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid refresh token",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    try:
+        payload = jwt.decode(refresh_token, JWT_REFRESH_SECRET_KEY, algorithms=[ALGORITHM])
+        if "sub" not in payload or "exp" not in payload:
+            raise credentials_exception
+        exp = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
+        if exp < datetime.now(timezone.utc):
+            raise credentials_exception
+        user_id = payload["sub"]
+        user = get_user_by_user_id(db, user_id)
+        return user
+    except JWTError:
+        raise credentials_exception

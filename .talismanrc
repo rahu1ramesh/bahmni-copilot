@@ -1,6 +1,6 @@
 fileignoreconfig:
 - filename: backend/app/services/auth.py
-  checksum: 8c0d7bd63cf22f602875028839ad5d4efae9c05a1ef9ec94444c1ac074d1d0c9
+  checksum: 577cf01463632b4b4494ecbd1097f99b0cac0694b5699a2100e0bf3e619697e1
 - filename: backend/app/api/routes/auth.py
   checksum: fbe9056bc637a8980ac7a6fc8ccc74144463564bf1fee452185fd1e99331b940
 - filename: backend/app/services/users.py
@@ -12,7 +12,7 @@ fileignoreconfig:
 - filename: backend/app/services/forms.py
   checksum: 09dd63a45853c87c4efbd9258717a7acaaf56de8b56c143be423591150705633
 - filename: backend/test/test_auth.py
-  checksum: 9c7939c17bee2ebc6496742fe73b1e1e14e0d6d3ecfe313cec8743c837946f25
+  checksum: 8c6d901dc67c41a7882cfaf02de72256b1de7f7bc19d82ff97526b732362c532
 - filename: backend/test/api/routes/test_forms.py
   checksum: d5af291f47d018bca24e1291bdf0ce9b2242deca8abb30d16defc295004f3ab2
 - filename: backend/test/api/routes/test_fields.py
